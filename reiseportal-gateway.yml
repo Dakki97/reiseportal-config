@@ -17,3 +17,14 @@ zuul.routes.reiseportal-discovery.path=/reiseportal-discovery/**
 zuul.routes.reiseportal-discovery.sensitive-headers=Set-Cookie,Authorization
 zuul.routes.reiseportal-discovery.url=http://localhost:8082
 hystrix.command.discovery.execution.isolation.thread.timeoutInMilliseconds=600000
+
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    platform: postgres
+    url: jdbc:postgresql://localhost:5433/reiseportal
+    username: postgres
+    password: secret
