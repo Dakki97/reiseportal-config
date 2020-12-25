@@ -1,4 +1,10 @@
-my:
-        greeting: Hello World from Config Server
-        list:
-                values: One, Two, Thr:ee, Four
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    platform: postgres
+    url: jdbc:postgresql://localhost:5433/reiseportal
+    username: postgres
+    password: secret
