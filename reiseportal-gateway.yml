@@ -1,30 +1,53 @@
-spring.cloud.config.name=gateway
-spring.cloud.config.discovery.service-id=config
-spring.cloud.config.discovery.enabled=true
-
-spring.application.name=gateway
-server.port=8081
-
-eureka.client.serviceUrl.defaultZone=http://localhot:8761/eureka
-eureka.client.region=default
-eureka.client.registryFetchIntervalSeconds=5
-
-zuul.routes.reiseportal-author.path=/author-service/**
-zuul.routes.reiseportal-author.sensitive-headers=Set-Cookie, Authorization
-hystrix.command.reiseportal-author.execution.isolation.thread.timeoutInMilliseconds=600000
-
-zuul.routes.reiseportal-discovery.path=/reiseportal-discovery/**
-zuul.routes.reiseportal-discovery.sensitive-headers=Set-Cookie,Authorization
-zuul.routes.reiseportal-discovery.url=http://localhost:8082
-hystrix.command.discovery.execution.isolation.thread.timeoutInMilliseconds=600000
-
+server:
+  port: 8081
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhot:8761/eureka
+    region: default
+    registryFetchIntervalSeconds: 5
+hystrix:
+  command:
+    reiseportal-author:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 600000
+    discovery:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 600000
+zuul:
+  routes:
+    reiseportal-author:
+      path: /reiseportal-discovery/**
+      sensitive-headers: Set-Cookie, Authorization
+    reiseportal-discovery:
+      path: /reiseportal-discovery/**
+      sensitive-headers: Set-Cookie, Authorization
+      url: http://localhost:8082
 spring:
+  profiles:
+    active: jdbc
+  application:
+    name: gateway
+  cloud:
+    config:
+      name: gateway
+      discovery:
+        service-id: config
+        enabled: true
+      server:
+        default-profile: production
+        default-label: latest
+        jdbc:
+          sql: SELECT `key`, `value` FROM `properties` WHERE `application`=? AND `profile`=? AND `label`=?;
+          order: 0
   jpa:
     hibernate.ddl-auto: update
   datasource:
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    platform: postgres
     url: jdbc:postgresql://localhost:5433/reiseportal
     username: postgres
     password: secret
